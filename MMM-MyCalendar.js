@@ -283,11 +283,11 @@ Module.register("MMM-MyCalendar", {
                                 timeWrapper.innerHTML = this.capFirst(moment(event.startDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
                             }
                         } else {
-                            timeWrapper.innerHTML = " - " +  this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
+                            timeWrapper.innerHTML = this.capFirst(moment(event.startDate, "x").fromNow());
                         }
                     }
                     
-                    timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + ))
+                    timeWrapper.innerHTML += timeWrapper.innerHTML = this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
                     
                 } else {
                     timeWrapper.innerHTML = this.capFirst(this.translate("RUNNING")) + " " + moment(event.endDate, "x").fromNow(true);
