@@ -30,6 +30,7 @@ Module.register("MMM-MyCalendar", {
         dateFormat: "MMMM D",
         timeFormat: "h:mm A",
         joiningWord: "at",
+        endDateSeperator: " - ",
         getRelative: 6,
         fadePoint: 0.25, // Start on 1/4th of the list.
         hidePrivate: false,
@@ -287,7 +288,18 @@ Module.register("MMM-MyCalendar", {
                         }
                     }
                     
-                    timeWrapper.innerHTML += timeWrapper.innerHTML = this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
+                    timeWrapper.innerHTML += this.config.endDateSeperator;
+                    
+                    if (!this.config.useRelativeDates) {
+                        if ((this.config.urgency > 1) && (momentEventStart.isSameOrBefore(moment(momentNow).add(this.config.urgency, "days")))) {
+                            // This event falls within the config.urgency period that the user has set
+                            timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+                        } else {
+                            timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
+                        }
+                    } else {
+                        timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+                    }
                     
                 } else {
                     timeWrapper.innerHTML = this.capFirst(this.translate("RUNNING")) + " " + moment(event.endDate, "x").fromNow(true);
