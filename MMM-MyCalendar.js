@@ -31,6 +31,7 @@ Module.register("MMM-MyCalendar", {
         timeFormat: "h:mm A",
         joiningWord: "at",
         endDateSeperator: " - ",
+        displayEndDate: true,
         getRelative: 6,
         fadePoint: 0.25, // Start on 1/4th of the list.
         hidePrivate: false,
@@ -289,31 +290,33 @@ Module.register("MMM-MyCalendar", {
                         }
                     }
 
-                    timeWrapper.innerHTML += this.config.endDateSeperator;
+                    if (this.config.displayEndDate) {
+                        timeWrapper.innerHTML += this.config.endDateSeperator;
 
-                    if (event.endDate - now < 6 * oneDay) {
-                        if (event.endDate - now < this.config.getRelative * oneHour) {
-                            // If event is within 6 hour, display 'in xxx' time format or moment.fromNow()
-                            timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
-                        } else if (momentEventEnd.isSame(momentNow, "day")) {
-                            timeWrapper.innerHTML += this.capFirst(this.translate("TODAY")) + " " + this.config.joiningWord + " " + this.capFirst(moment(event.endDate, "x").format(this.config.timeFormat));
-                        } else if (momentEventEnd.isSame(moment(momentNow).add(1, "day"), "day")) {
-                            // This event is tomorrow
-                            timeWrapper.innerHTML += this.capFirst(this.translate("TOMORROW")) + " " + this.config.joiningWord + " " + this.capFirst(moment(event.endDate, "x").format(this.config.timeFormat));
-                        } else {
-                            timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dayOfWeekFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
-                        }
-                    } else {
-
-                        if (!this.config.useRelativeDates) {
-                            if ((this.config.urgency > 1) && (momentEventStart.isSameOrBefore(moment(momentNow).add(this.config.urgency, "days")))) {
-                                // This event falls within the config.urgency period that the user has set
+                        if (event.endDate - now < 6 * oneDay) {
+                            if (event.endDate - now < this.config.getRelative * oneHour) {
+                                // If event is within 6 hour, display 'in xxx' time format or moment.fromNow()
                                 timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+                            } else if (momentEventEnd.isSame(momentNow, "day")) {
+                                timeWrapper.innerHTML += this.capFirst(this.translate("TODAY")) + " " + this.config.joiningWord + " " + this.capFirst(moment(event.endDate, "x").format(this.config.timeFormat));
+                            } else if (momentEventEnd.isSame(moment(momentNow).add(1, "day"), "day")) {
+                                // This event is tomorrow
+                                timeWrapper.innerHTML += this.capFirst(this.translate("TOMORROW")) + " " + this.config.joiningWord + " " + this.capFirst(moment(event.endDate, "x").format(this.config.timeFormat));
                             } else {
-                                timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
+                                timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dayOfWeekFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
                             }
                         } else {
-                            timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+
+                            if (!this.config.useRelativeDates) {
+                                if ((this.config.urgency > 1) && (momentEventStart.isSameOrBefore(moment(momentNow).add(this.config.urgency, "days")))) {
+                                    // This event falls within the config.urgency period that the user has set
+                                    timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+                                } else {
+                                    timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").format(this.config.dateFormat + " [" + this.config.joiningWord + "] " + this.config.timeFormat));
+                                }
+                            } else {
+                                timeWrapper.innerHTML += this.capFirst(moment(event.endDate, "x").fromNow());
+                            }
                         }
                     }
 
